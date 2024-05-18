@@ -56,7 +56,8 @@ init();
 // else 차례를 바꾼다.
 
 // 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
-btnNew.addEventListener('click', init);
+// 가끔 null값이 떠서 있는지 먼저 체크해줌
+btnNew?.addEventListener('click', init);
 
 
 function App() {
@@ -79,8 +80,8 @@ function App() {
                 <p className="current-score" id="current--1">0</p>
             </div>
         </section>
-        {gameStart && <img src={`${process.env.PUBLIC_URL}/assets/dice3.png`} alt="Playing dice" className="dice"/>}
         <button className="btn btn--new">🔄 New game</button>
+        {gameStart && <img src={`${process.env.PUBLIC_URL}/assets/dice3.png`} alt="Playing dice" className="dice"/>}
         <button className="btn btn--roll">🎲 Roll dice</button>
         <button className="btn btn--hold">📥 Hold</button>
     </main>
