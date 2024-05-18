@@ -72,8 +72,7 @@ function App() {
         return Math.trunc(Math.random() * 6) + 1;
     }
     const changePlayer = () => {
-        if (activePlayer === 1) activePlayer = 2;
-        else activePlayer = 1;
+        activePlayer = activePlayer === 1 ? 2 : 1;
     }
 
     const rollDice = () => {
