@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from "react";
+import {useRef, useState} from "react";
 const player1 = document.querySelector('.player-0');
 const player2 = document.querySelector('.player-1');
 const score1 = document.querySelector('.score--0');
@@ -43,22 +43,22 @@ function init() {
 init();
 
 // 가끔 null값이 떠서 있는지 먼저 체크해줌
-btnNew?.addEventListener('click', init);
-btnRoll?.addEventListener('click', function() {
-
-    gameStart = true;
-    console.log(gameStart);
-    if (playing) {
-        const diceText = Math.floor(Math.random() * 6) + 1;
-        console.log("dice값 : ", diceText);
-        count++;
-        console.log("count : ", count)
-    }
-
-})
+// btnNew?.addEventListener('click', init);
+// btnRoll?.addEventListener('click', function() {
+//     gameStart = true;
+//     console.log(gameStart);
+//     if (playing) {
+//         const diceText = Math.floor(Math.random() * 6) + 1;
+//         console.log("dice값 : ", diceText);
+//         count++;
+//         console.log("count : ", count)
+//     }
+// })
 
 function App() {
     const [gameStart, setGameStart] = useState(false);
+    const [dice, setDice] = useState(false);
+    const diceImgRef = useRef(null);
     const initGame = () => {
         if (gameStart) {
             setGameStart(false);
@@ -68,6 +68,19 @@ function App() {
     const startGame = () => {
         if (!gameStart) {
             setGameStart(true);
+        }
+        RollDice();
+    }
+
+    const RollDice = () => {
+        if (playing) {
+            const newDice = Math.floor(Math.random() * 6) + 1 ;
+            console.log("dice: ", newDice);
+            setDice(newDice);
+            // Update dice image
+            if (diceImgRef.current) {
+                diceImgRef.current.src = `/assets/dice${newDice}.png`;
+            }
         }
     }
 
@@ -105,7 +118,7 @@ function App() {
             </div>
         </section>
         <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
-        {gameStart && <img src={`${process.env.PUBLIC_URL}/assets/dice3.png`} alt="Playing dice" className="dice"/>}
+        {gameStart && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
         <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
         <button className="btn btn--hold">📥 Hold</button>
     </main>
