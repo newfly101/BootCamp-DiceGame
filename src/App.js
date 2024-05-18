@@ -1,21 +1,9 @@
 import './App.css';
 import {useRef, useState} from "react";
-const player1 = document.querySelector('.player-0');
-const player2 = document.querySelector('.player-1');
-const score1 = document.querySelector('.score--0');
-const score2 = document.querySelector('.score--1');
-const current1 = document.querySelector('.current-0');
-const current2 = document.querySelector('.current-1');
-
-const diceImg = document.querySelector('.dice');
-const btnNew = document.querySelector('.btn--new');
-const btnRoll = document.querySelector('.btn--roll');
-const btnHold = document.querySelector('.btn--hold');
 
 // eslint-disable-next-line no-unused-vars
-let scores, currentScore, activePlayer, playing, gameStart;
-let count = 0;
-function init() {
+let scores, currentScore, activePlayer, playing;
+const init = () => {
     // 초기화 작업 할 것
     // 전체 스코어 체크용 비교 후 winner 결정
     scores = [0, 0];
@@ -26,15 +14,6 @@ function init() {
     // 게임 시작 flag -> false면 더이상 버튼이 동작하지 않도록 구현
     playing = true;
 
-    // 각 element의 값을 0으로 초기화 해줌
-    // score1.textContent = 0;
-    // score2.textContent = 0;
-    // current1.textContent = 0;
-    // current2.textContent = 0;
-
-    // 게임 시작 버튼을 누르기 전에 Dice의 img가 보이지 않도록 설정
-    gameStart = false; //flag 값으로 설정할 예정
-
     // player1 또는 2가 승리 시 disabled 한 부분 제거
     // player-active 된 부분 제거
 }
@@ -42,23 +21,14 @@ function init() {
 // 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
 init();
 
-// 가끔 null값이 떠서 있는지 먼저 체크해줌
-// btnNew?.addEventListener('click', init);
-// btnRoll?.addEventListener('click', function() {
-//     gameStart = true;
-//     console.log(gameStart);
-//     if (playing) {
-//         const diceText = Math.floor(Math.random() * 6) + 1;
-//         console.log("dice값 : ", diceText);
-//         count++;
-//         console.log("count : ", count)
-//     }
-// })
-
 function App() {
+    // 게임 시작 버튼을 누르기 전에 Dice의 img가 보이지 않도록 설정
     const [gameStart, setGameStart] = useState(false);
-    const [dice, setDice] = useState(false);
-    const diceImgRef = useRef(null);
+    const [dice, setDice] = useState(0);
+    const [currentScore, setCurrentScore] = useState(0);
+    const diceImgRef = useRef();
+
+
     const initGame = () => {
         if (gameStart) {
             setGameStart(false);
@@ -69,77 +39,81 @@ function App() {
         if (!gameStart) {
             setGameStart(true);
         }
-        RollDice();
+        rollDice();
     }
 
-    const RollDice = () => {
+    const holdGame = () => {
+        // 사용자가 점수를 홀드한다
+        // 현재 점수를 누적 점수에 더한다
+        // if 누적 점수가 50점을 넘는가?
+    }
+
+    const getDiceNumber = () => {
+        return Math.trunc(Math.random() * 6) + 1;
+    }
+    const changePlayer = () => {
+        if (activePlayer === 1) activePlayer = 2;
+        else activePlayer = 1;
+    }
+
+    const rollDice = () => {
+        // console.log("player: ", activePlayer);
         if (playing) {
-            const newDice = Math.floor(Math.random() * 6) + 1 ;
-            console.log("dice: ", newDice);
-            setDice(newDice);
+            let randomDice = getDiceNumber();
+            // console.log("dice: ", newDice);
+            setDice(randomDice);
+
             // Update dice image
+            console.log("diceImgRef.current: ", diceImgRef.current);
             if (diceImgRef.current) {
-                diceImgRef.current.src = `/assets/dice${newDice}.png`;
+                diceImgRef.current.src = `/assets/dice${randomDice}.png`;
             }
+
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
-            if (newDice === 1 || newDice === 2) {
+            if (randomDice <= 2) {
                 // 현재 값 초기화
-                currentScore = 0;
-
-                // player 차례 바꿔주는 로직
-                if (activePlayer === 1) activePlayer = 2;
-                else activePlayer = 1;
-
+                setCurrentScore(0);
+                // player 차례 바꿔 주는 로직
+                changePlayer();
             } else {
-                currentScore += newDice;
+                // 현재 값에 Dice 값 추가
+                setCurrentScore(currentScore + randomDice);
             }
-            console.log("currentScore: ",currentScore);
+
+            console.log("player: ", activePlayer, "dice: ", randomDice, "currentScore: ", currentScore);
+        } else {
+            // 게임이 종료된 경우 playing = false 인 경우
         }
     }
 
-    // 사용자가 주사위를 던짐
-        // 주사위 숫자가 무작위로 나옴 Math.Random()
-    // if (math.random() == 1 or 2)
-        // 현재 점수 초기화
-    // else if 3,4,5,6 인가?
-        // 현재 점수에 주사위 숫자를 더한다
-        // 게임을 계속 진행함
-    // else
-        // 사용자가 점수를 홀드한다
-        // 현재 점수를 누적 점수에 더한다
-    // if 누적 점수가 50점을 넘는가?
-        // 게임을 종료
-    // else 차례를 바꾼다.
-
-
-  return (
-    <main>
-        <section className="player player-0">
-            <h2 className="name" id="name--0">Player 1</h2>
-            <p className="score" id="score--0">0</p>
-            <div className="current">
-                <p className="current-label">Current</p>
-                <p className="current-score" id="current--0">
-                    {activePlayer === 1 ? currentScore : 0}
-                </p>
-            </div>
-        </section>
-        <section className="player player-1">
-            <h2 className="name" id="name--1">Player 2</h2>
-            <p className="score" id="score--1">0</p>
-            <div className="current">
-                <p className="current-label">Current</p>
-                <p className="current-score" id="current--1">
-                    {activePlayer === 2 ? currentScore : 0}
-                </p>
-            </div>
-        </section>
-        <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
-        {gameStart && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
-        <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
-        <button className="btn btn--hold">📥 Hold</button>
-    </main>
-  );
+    return (
+        <main>
+            <section className="player player-0">
+                <h2 className="name" id="name--0">Player 1</h2>
+                <p className="score" id="score--0">0</p>
+                <div className="current">
+                    <p className="current-label">Current</p>
+                    <p className="current-score" id="current--0">
+                        {activePlayer === 1 ? currentScore : 0}
+                    </p>
+                </div>
+            </section>
+            <section className="player player-1">
+                <h2 className="name" id="name--1">Player 2</h2>
+                <p className="score" id="score--1">0</p>
+                <div className="current">
+                    <p className="current-label">Current</p>
+                    <p className="current-score" id="current--1">
+                        {activePlayer === 2 ? currentScore : 0}
+                    </p>
+                </div>
+            </section>
+            <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
+            {gameStart && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
+            <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
+            <button className="btn btn--hold">📥 Hold</button>
+        </main>
+    );
 }
 
 export default App;
