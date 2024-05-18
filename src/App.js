@@ -107,7 +107,8 @@ function App() {
 
     return (
         <main>
-            <section className="player player-0">
+
+            <section className={activePlayer === 1 ? "player player--active" : "player"}>
                 <h2 className="name" id="name--0">Player 1</h2>
                 <p className="score" id="score--0">{user1Score ? user1Score : 0}</p>
                 <div className="current">
@@ -117,7 +118,7 @@ function App() {
                     </p>
                 </div>
             </section>
-            <section className="player player-1">
+            <section className={activePlayer === 2 ? "player player--active" : "player"}>
                 <h2 className="name" id="name--1">Player 2</h2>
                 <p className="score" id="score--1">{user2Score ? user2Score : 0}</p>
                 <div className="current">
