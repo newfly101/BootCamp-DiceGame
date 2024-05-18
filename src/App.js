@@ -1,5 +1,5 @@
 import './App.css';
-
+import {useState} from "react";
 const player1 = document.querySelector('.player-0');
 const player2 = document.querySelector('.player-1');
 const score1 = document.querySelector('.score--0');
@@ -14,8 +14,8 @@ const btnHold = document.querySelector('.btn--hold');
 
 // eslint-disable-next-line no-unused-vars
 let scores, currentScore, activePlayer, playing, gameStart;
-
-const init = () => {
+let count = 0;
+function init() {
     // 초기화 작업 할 것
     // 전체 스코어 체크용 비교 후 winner 결정
     scores = [0, 0];
@@ -39,30 +39,54 @@ const init = () => {
     // player-active 된 부분 제거
 }
 
+// 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
 init();
 
-// 사용자가 주사위를 던짐
-    // 주사위 숫자가 무작위로 나옴 Math.Random()
-// if (math.random() == 1 or 2)
-    // 현재 점수 초기화
-// else if 3,4,5,6 인가?
-    // 현재 점수에 주사위 숫자를 더한다
-    // 게임을 계속 진행함
-// else
-    // 사용자가 점수를 홀드한다
-    // 현재 점수를 누적 점수에 더한다
-// if 누적 점수가 50점을 넘는가?
-    // 게임을 종료
-// else 차례를 바꾼다.
-
-// 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
 // 가끔 null값이 떠서 있는지 먼저 체크해줌
 btnNew?.addEventListener('click', init);
+btnRoll?.addEventListener('click', function() {
 
+    gameStart = true;
+    console.log(gameStart);
+    if (playing) {
+        const diceText = Math.floor(Math.random() * 6) + 1;
+        console.log("dice값 : ", diceText);
+        count++;
+        console.log("count : ", count)
+    }
+
+})
 
 function App() {
+    const [gameStart, setGameStart] = useState(false);
+    const initGame = () => {
+        if (gameStart) {
+            setGameStart(false);
+            init();
+        }
+    }
+    const startGame = () => {
+        if (!gameStart) {
+            setGameStart(true);
+        }
+    }
+
+    // 사용자가 주사위를 던짐
+        // 주사위 숫자가 무작위로 나옴 Math.Random()
+    // if (math.random() == 1 or 2)
+        // 현재 점수 초기화
+    // else if 3,4,5,6 인가?
+        // 현재 점수에 주사위 숫자를 더한다
+        // 게임을 계속 진행함
+    // else
+        // 사용자가 점수를 홀드한다
+        // 현재 점수를 누적 점수에 더한다
+    // if 누적 점수가 50점을 넘는가?
+        // 게임을 종료
+    // else 차례를 바꾼다.
+
+
   return (
-    <body>
     <main>
         <section className="player player-0">
             <h2 className="name" id="name--0">Player 1</h2>
@@ -80,12 +104,11 @@ function App() {
                 <p className="current-score" id="current--1">0</p>
             </div>
         </section>
-        <button className="btn btn--new">🔄 New game</button>
+        <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
         {gameStart && <img src={`${process.env.PUBLIC_URL}/assets/dice3.png`} alt="Playing dice" className="dice"/>}
-        <button className="btn btn--roll">🎲 Roll dice</button>
+        <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
         <button className="btn btn--hold">📥 Hold</button>
     </main>
-    </body>
   );
 }
 
