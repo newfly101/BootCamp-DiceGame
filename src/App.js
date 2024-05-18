@@ -1,10 +1,18 @@
 import './App.css';
 
+const init = () => {
+    // 초기화 작업 할 것
+}
+
+init();
+
+
+
 function App() {
   return (
     <body>
     <main>
-        <section className="player player--0">
+        <section className="player">
             <h2 className="name" id="name--0">Player 1</h2>
             <p className="score" id="score--0">0</p>
             <div className="current">
@@ -12,7 +20,7 @@ function App() {
                 <p className="current-score" id="current--0">0</p>
             </div>
         </section>
-        <section className="player player--1 player--active">
+        <section className="player">
             <h2 className="name" id="name--1">Player 2</h2>
             <p className="score" id="score--1">0</p>
             <div className="current">
