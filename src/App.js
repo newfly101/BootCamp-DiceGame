@@ -1,5 +1,17 @@
 import './App.css';
 
+const player1 = document.querySelector('.player-0');
+const player2 = document.querySelector('.player-1');
+const score1 = document.querySelector('.score--0');
+const score2 = document.querySelector('.score--1');
+const current1 = document.querySelector('.current-0');
+const current2 = document.querySelector('.current-1');
+
+const diceImg = document.querySelector('.dice');
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
+
 const init = () => {
     // 초기화 작업 할 것
 }
@@ -25,7 +37,7 @@ function App() {
   return (
     <body>
     <main>
-        <section className="player">
+        <section className="player player-0">
             <h2 className="name" id="name--0">Player 1</h2>
             <p className="score" id="score--0">0</p>
             <div className="current">
@@ -33,7 +45,7 @@ function App() {
                 <p className="current-score" id="current--0">0</p>
             </div>
         </section>
-        <section className="player">
+        <section className="player player-1">
             <h2 className="name" id="name--1">Player 2</h2>
             <p className="score" id="score--1">0</p>
             <div className="current">
