@@ -81,6 +81,19 @@ function App() {
             if (diceImgRef.current) {
                 diceImgRef.current.src = `/assets/dice${newDice}.png`;
             }
+            // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
+            if (newDice === 1 || newDice === 2) {
+                // 현재 값 초기화
+                currentScore = 0;
+
+                // player 차례 바꿔주는 로직
+                if (activePlayer === 1) activePlayer = 2;
+                else activePlayer = 1;
+
+            } else {
+                currentScore += newDice;
+            }
+            console.log("currentScore: ",currentScore);
         }
     }
 
@@ -106,7 +119,9 @@ function App() {
             <p className="score" id="score--0">0</p>
             <div className="current">
                 <p className="current-label">Current</p>
-                <p className="current-score" id="current--0">0</p>
+                <p className="current-score" id="current--0">
+                    {activePlayer === 1 ? currentScore : 0}
+                </p>
             </div>
         </section>
         <section className="player player-1">
@@ -114,7 +129,9 @@ function App() {
             <p className="score" id="score--1">0</p>
             <div className="current">
                 <p className="current-label">Current</p>
-                <p className="current-score" id="current--1">0</p>
+                <p className="current-score" id="current--1">
+                    {activePlayer === 2 ? currentScore : 0}
+                </p>
             </div>
         </section>
         <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
