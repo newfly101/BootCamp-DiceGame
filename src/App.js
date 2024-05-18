@@ -55,7 +55,8 @@ init();
     // 게임을 종료
 // else 차례를 바꾼다.
 
-
+// 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
+btnNew.addEventListener('click', init);
 
 
 function App() {
