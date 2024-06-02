@@ -81,7 +81,7 @@ function App() {
         }
         setCurrentScore(0);
         checkWinner();
-        if (!winner) {
+        if (!winner && currentScore > 0) {
             changePlayer();
         }
     }
