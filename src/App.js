@@ -93,6 +93,7 @@ function App() {
         }
     }
 
+    // [4] hold 버튼 누르는 경우 점수 계산해주기
     const holdGame = () => {
         if (activePlayer === 1) {
             let score = userScore.user1 + currentScore;
@@ -107,11 +108,9 @@ function App() {
                 user2: score
             })
         }
-        // 사용자 값 초기화
+        // 주사위 계산 값 초기화 및 턴 넘기기
         setCurrentScore(0);
-        // 유저 변경
         changePlayer();
-
     }
 
     // [2-1] 주사위 굴리기 : 랜덤 주사위 숫자
@@ -119,7 +118,9 @@ function App() {
         return Math.trunc(Math.random() * 6) + 1;
     }
 
+    // [6] 승리 표기하기
     const checkWinner = () => {
+        console.log("userScore : ",userScore);
         if (userScore.user1 >= 50) {
             playing = false;
             setWinner(1);
@@ -130,13 +131,6 @@ function App() {
             console.log("Player 2이 이겼습니다.");
         }
     }
-
-
-
-
-
-
-
 
     return (
         <main>
