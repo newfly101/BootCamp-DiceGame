@@ -17,7 +17,7 @@ function App() {
         }
         checkWinner();
         // console.log("diceImgRef.current: ", diceImgRef.current);
-    }, [dice, gameStart, userScore.user1, userScore.user2]);
+    }, [dice, winner, gameStart, userScore.user1, userScore.user2]);
 
     // [0] 게임의 진행 여부와 상관 없이 초기화
     const initGame = () => {
@@ -41,7 +41,7 @@ function App() {
         if (gameStart) {
             let randomDice = getDiceNumber();
             setDice(randomDice);
-            console.log(randomDice);
+            // console.log(randomDice);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
             if (randomDice <= 0) {
@@ -56,31 +56,35 @@ function App() {
     // [3] 주사위의 눈이 1,2인 경우 턴 교체
     // [5] hold 버튼 누르는 경우 턴 교체
     const changePlayer = () => {
-        if (gameStart) {
+        if (gameStart && !winner) {
             setCurrentScore(0); // 현재 굴린 주사위 값 초기화
-            if (winner !== 1 && winner !== 2) {
-                setActivePlayer(prevPlayer => (prevPlayer === 1 ? 2 : 1));
-            }
+            setActivePlayer(prevPlayer => (prevPlayer === 1 ? 2 : 1));
         }
     }
 
     // [4] hold 버튼 누르는 경우 점수 계산해주기
     const holdGame = () => {
-        if (activePlayer === 1) {
-            let score = userScore.user1 + currentScore;
-            setUserScore({
-                user1: score,
-                user2: userScore.user2,
-            })
-        } else {
-            let score = userScore.user2 + currentScore;
-            setUserScore({
-                user1: userScore.user1,
-                user2: score
-            })
+        if (gameStart && !winner) {
+            if (activePlayer === 1) {
+                let score = userScore.user1 + currentScore;
+                setUserScore({
+                    user1: score,
+                    user2: userScore.user2,
+                })
+            } else {
+                let score = userScore.user2 + currentScore;
+                setUserScore({
+                    user1: userScore.user1,
+                    user2: score
+                })
+            }
         }
-        changePlayer();
+        setCurrentScore(0);
         checkWinner();
+        if (!winner) {
+            changePlayer();
+        }
+
     }
 
     // [2-1] 주사위 굴리기 : 랜덤 주사위 숫자
@@ -102,7 +106,7 @@ function App() {
     return (
         <main>
             <section className={ winner === 1 ?
-                "player player--winner" : activePlayer === 1 ? "player player--active" : "player" }>
+                "player player--winner" : (gameStart && activePlayer === 1) ? "player player--active" : "player" }>
                 <h2 className="name" id="name--0">Player 1</h2>
                 <p className="score" id="score--0">{userScore.user1 ? userScore.user1 : 0}</p>
                 {winner === 1 && <p>1번 PLAYER 이겼습니다.</p>}
@@ -114,7 +118,7 @@ function App() {
                 </div>
             </section>
             <section className={ winner === 2 ?
-                "player player--winner" : activePlayer === 2 ? "player player--active" : "player" }>
+                "player player--winner" : (gameStart && activePlayer === 2) ? "player player--active" : "player" }>
                 <h2 className="name" id="name--1">Player 2</h2>
                 <p className="score" id="score--1">{userScore.user2 ? userScore.user2 : 0}</p>
                 {winner === 2 && <p>2번 PLAYER 이겼습니다.</p>}
