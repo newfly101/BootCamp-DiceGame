@@ -23,9 +23,14 @@ function App() {
     const [currentScore, setCurrentScore] = useState(0);
     const [userScore, setUserScore] = useState({user1: 0, user2: 0});
     const [winner, setWinner] = useState(null);
-    const diceImgRef = useRef();
+    const diceImgRef = useRef(null);
 
     useEffect(() => {
+        if (diceImgRef.current) {
+            diceImgRef.current.src = `/assets/dice${dice}.png`;
+        }
+        console.log("diceImgRef.current: ", diceImgRef.current);
+
         // 50점 이상인 경우 승리 표시하기
         if(playing) {
             checkWinner();
@@ -33,7 +38,7 @@ function App() {
         if (winner) {
             changePlayer();
         }
-    }, [winner, userScore.user1, userScore.user2]);
+    }, [dice, winner, userScore.user1, userScore.user2]);
 
     const initGame = () => {
         if (gameStart) {
@@ -64,10 +69,11 @@ function App() {
             // dice값 적용
 
             // Update dice image
-            console.log("diceImgRef.current: ", diceImgRef.current);
-            if (diceImgRef.current) {
-                diceImgRef.current.src = `/assets/dice${randomDice}.png`;
-            }
+
+            // if (diceImgRef.current) {
+            //     diceImgRef.current.src = `/assets/dice${randomDice}.png`;
+            // }
+            // console.log("diceImgRef.current: ", diceImgRef.current);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
             if (randomDice <= 1) {
@@ -79,7 +85,7 @@ function App() {
                 // 현재 값에 Dice 값 추가
                 setCurrentScore(currentScore + randomDice);
             }
-            console.log("player: ", activePlayer, "dice: ", randomDice, "currentScore: ", currentScore);
+            // console.log("player: ", activePlayer, "dice: ", randomDice, "currentScore: ", currentScore);
         } else {
             // 게임이 종료된 경우 playing = false 인 경우
         }
