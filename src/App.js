@@ -2,7 +2,7 @@ import './App.css';
 import {useEffect, useRef, useState} from "react";
 
 // eslint-disable-next-line no-unused-vars
-let scores, currentScore, activePlayer, playing;
+let currentScore, activePlayer, playing;
 const init = () => {
     // 초기화 작업 할 것
     currentScore = 0;
@@ -22,7 +22,7 @@ function App() {
     const [dice, setDice] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
     const [userScore, setUserScore] = useState({user1: 0, user2: 0});
-    const [winner, setWinner] = useState(0);
+    const [winner, setWinner] = useState(null);
     const diceImgRef = useRef();
 
     useEffect(() => {
@@ -30,7 +30,7 @@ function App() {
         if(playing) {
             checkWinner();
         }
-        if (winner === 0) {
+        if (winner) {
             changePlayer();
         }
     }, [winner, userScore.user1, userScore.user2]);
@@ -43,7 +43,7 @@ function App() {
             setDice(0);
             setUserScore({user1: 0, user2: 0});
             activePlayer = 1;
-            setWinner(0);
+            setWinner(null);
         }
     }
     // [1] 게임 시작하는 경우
@@ -55,52 +55,13 @@ function App() {
         rollDice();
     }
 
-    const checkWinner = () => {
-        if (userScore.user1 >= 50) {
-            playing = false;
-            setWinner(1);
-            console.log("Player 1이 이겼습니다.");
-        } else if (userScore.user2 >= 50) {
-            playing = false;
-            setWinner(1);
-            console.log("Player 2이 이겼습니다.");
-        }
-    }
-
-    const holdGame = () => {
-        if (activePlayer === 1) {
-            let score = userScore.user1 + currentScore;
-            setUserScore({
-                user1: score,
-                user2: userScore.user2,
-            })
-        } else {
-            let score = userScore.user2 + currentScore;
-            setUserScore({
-                user1: userScore.user1,
-                user2: score
-            })
-        }
-        // 사용자 값 초기화
-        setCurrentScore(0);
-        // 유저 변경
-
-    }
-
-    const getDiceNumber = () => {
-        return Math.trunc(Math.random() * 6) + 1;
-    }
-    const changePlayer = () => {
-        activePlayer = activePlayer === 1 ? 2 : 1;
-    }
-
+    // [2] 주사위 굴리기
     const rollDice = () => {
-        // console.log("player: ", activePlayer);
         checkWinner();
         if (playing) {
             let randomDice = getDiceNumber();
-            // console.log("dice: ", newDice);
             setDice(randomDice);
+            // dice값 적용
 
             // Update dice image
             console.log("diceImgRef.current: ", diceImgRef.current);
@@ -123,6 +84,59 @@ function App() {
             // 게임이 종료된 경우 playing = false 인 경우
         }
     }
+
+    // [3] 주사위의 눈이 1,2인 경우 턴 교체
+    // [5]
+    const changePlayer = () => {
+        if (playing) {
+            activePlayer = activePlayer === 1 ? 2 : 1;
+        }
+    }
+
+    const holdGame = () => {
+        if (activePlayer === 1) {
+            let score = userScore.user1 + currentScore;
+            setUserScore({
+                user1: score,
+                user2: userScore.user2,
+            })
+        } else {
+            let score = userScore.user2 + currentScore;
+            setUserScore({
+                user1: userScore.user1,
+                user2: score
+            })
+        }
+        // 사용자 값 초기화
+        setCurrentScore(0);
+        // 유저 변경
+        changePlayer();
+
+    }
+
+    // [2-1] 주사위 굴리기 : 랜덤 주사위 숫자
+    const getDiceNumber = () => {
+        return Math.trunc(Math.random() * 6) + 1;
+    }
+
+    const checkWinner = () => {
+        if (userScore.user1 >= 50) {
+            playing = false;
+            setWinner(1);
+            console.log("Player 1이 이겼습니다.");
+        } else if (userScore.user2 >= 50) {
+            playing = false;
+            setWinner(1);
+            console.log("Player 2이 이겼습니다.");
+        }
+    }
+
+
+
+
+
+
+
 
     return (
         <main>
