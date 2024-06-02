@@ -15,16 +15,13 @@ function App() {
         if (diceImgRef.current) {
             diceImgRef.current.src = `/assets/dice${dice}.png`;
         }
+        checkWinner();
         // console.log("diceImgRef.current: ", diceImgRef.current);
-
-        if(gameStart) {
-            checkWinner();
-        }
     }, [dice, gameStart, userScore.user1, userScore.user2]);
 
     // [0] 게임의 진행 여부와 상관 없이 초기화
     const initGame = () => {
-        setGameStart(false);
+        setGameStart(true);
         setCurrentScore(0);
         setDice(0);
         setUserScore({user1: 0, user2: 0});
@@ -61,7 +58,9 @@ function App() {
     const changePlayer = () => {
         if (gameStart) {
             setCurrentScore(0); // 현재 굴린 주사위 값 초기화
-            setActivePlayer(prevPlayer => (prevPlayer === 1 ? 2 : 1));
+            if (winner !== 1 && winner !== 2) {
+                setActivePlayer(prevPlayer => (prevPlayer === 1 ? 2 : 1));
+            }
         }
     }
 
@@ -81,6 +80,7 @@ function App() {
             })
         }
         changePlayer();
+        checkWinner();
     }
 
     // [2-1] 주사위 굴리기 : 랜덤 주사위 숫자
@@ -127,8 +127,15 @@ function App() {
             </section>
             <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
             {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
-            <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
-            <button className="btn btn--hold" onClick={holdGame}>📥 Hold</button>
+            {gameStart ?
+                <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
+                :
+                <button className="btn btn--roll">🎲 Roll dice</button>}
+            {gameStart ?
+                <button className="btn btn--hold" onClick={holdGame}>📥 Hold</button>
+                :
+                <button className="btn btn--hold">📥 Hold</button>
+            }
         </main>
     );
 }
