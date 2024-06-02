@@ -12,12 +12,23 @@ function App() {
     const [winner, setWinner] = useState(null);
     const diceImgRef = useRef(null);
 
+    // [6] 승리 표기하기
+    const checkWinner = useCallback(() => {
+        if (userScore.user1 >= 50) {
+            setGameStart(false);
+            setWinner(1);
+        } else if (userScore.user2 >= 50) {
+            setGameStart(false);
+            setWinner(2);
+        }
+    }, [userScore]);
+
     useEffect(() => {
         if (diceImgRef.current) {
             diceImgRef.current.src = `/assets/dice${dice}.png`;
         }
         checkWinner();
-    }, [dice, winner, gameStart, userScore.user1, userScore.user2]);
+    }, [dice, checkWinner, gameStart, userScore.user1, userScore.user2]);
 
     // [0] 게임의 진행 여부와 상관 없이 초기화
     const initGame = () => {
@@ -90,17 +101,7 @@ function App() {
         return Math.trunc(Math.random() * 6) + 1;
     }
 
-    // [6] 승리 표기하기
-    const checkWinner =
-        useCallback(() => {
-            if (userScore.user1 >= 50) {
-                setGameStart(false);
-                setWinner(1);
-            } else if (userScore.user2 >= 50) {
-                setGameStart(false);
-                setWinner(2);
-            }
-        }, [userScore]);
+
 
 
     const closeModal = () => {
