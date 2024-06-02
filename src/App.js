@@ -1,5 +1,5 @@
 import './App.css';
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import Toast from "./component/Toast";
 
 function App() {
@@ -17,7 +17,6 @@ function App() {
             diceImgRef.current.src = `/assets/dice${dice}.png`;
         }
         checkWinner();
-        // console.log("diceImgRef.current: ", diceImgRef.current);
     }, [dice, winner, gameStart, userScore.user1, userScore.user2]);
 
     // [0] 게임의 진행 여부와 상관 없이 초기화
@@ -92,15 +91,17 @@ function App() {
     }
 
     // [6] 승리 표기하기
-    const checkWinner = () => {
-        if (userScore.user1 >= 50) {
-            setGameStart(false);
-            setWinner(1);
-        } else if (userScore.user2 >= 50) {
-            setGameStart(false);
-            setWinner(2);
-        }
-    }
+    const checkWinner =
+        useCallback(() => {
+            if (userScore.user1 >= 50) {
+                setGameStart(false);
+                setWinner(1);
+            } else if (userScore.user2 >= 50) {
+                setGameStart(false);
+                setWinner(2);
+            }
+        }, [userScore]);
+
 
     const closeModal = () => {
         setWinner(null);
