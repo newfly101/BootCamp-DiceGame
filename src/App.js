@@ -86,7 +86,7 @@ function App() {
     }
 
     // [3] 주사위의 눈이 1,2인 경우 턴 교체
-    // [5]
+    // [5] hold 버튼 누르는 경우 턴 교체
     const changePlayer = () => {
         if (playing) {
             activePlayer = activePlayer === 1 ? 2 : 1;
