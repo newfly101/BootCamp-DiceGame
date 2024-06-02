@@ -131,15 +131,8 @@ function App() {
             </section>
             <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
             {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
-            {gameStart ?
-                <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
-                :
-                <button className="btn btn--roll">🎲 Roll dice</button>}
-            {gameStart ?
-                <button className="btn btn--hold" onClick={holdGame}>📥 Hold</button>
-                :
-                <button className="btn btn--hold">📥 Hold</button>
-            }
+            <button className="btn btn--roll" onClick={startGame} disabled={!gameStart}>🎲 Roll dice</button>
+            <button className="btn btn--hold" onClick={holdGame} disabled={!gameStart}>📥 Hold</button>
         </main>
     );
 }
