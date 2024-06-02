@@ -1,5 +1,5 @@
 import './App.css';
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 // eslint-disable-next-line no-unused-vars
 let scores, currentScore, activePlayer, playing;
@@ -23,8 +23,18 @@ function App() {
     const [currentScore, setCurrentScore] = useState(0);
     const [user1Score, setUser1Score] = useState(0);
     const [user2Score, setUser2Score] = useState(0);
+    const [winner, setWinner] = useState(0);
     const diceImgRef = useRef();
 
+    useEffect(() => {
+        // 50점 이상인 경우 승리 표시하기
+        if(playing) {
+            checkWinner();
+        }
+        if (winner === 0) {
+            changePlayer();
+        }
+    }, [winner, user1Score, user2Score]);
 
     const initGame = () => {
         if (gameStart) {
@@ -40,6 +50,7 @@ function App() {
             setUser2Score(0);
             // 어떤 플레이어가 게임을 진행중인지 체크
             activePlayer = 1;
+            setWinner(0);
         }
     }
     const startGame = () => {
@@ -47,6 +58,18 @@ function App() {
             setGameStart(true);
         }
         rollDice();
+    }
+
+    const checkWinner = () => {
+        if (user1Score >= 50) {
+            playing = false;
+            setWinner(1);
+            console.log("Player 1이 이겼습니다.");
+        } else if (user2Score >= 50){
+            playing = false;
+            setWinner(2);
+            console.log("Player 2가 이겼습니다.");
+        }
     }
 
     const holdGame = () => {
@@ -58,14 +81,9 @@ function App() {
         // 사용자 값 초기화
         setCurrentScore(0);
         // 유저 변경
-        changePlayer();
-        if (user1Score >= 50) {
-            playing = false;
-            console.log("Player 1이 이겼습니다.");
-        } else if (user2Score >= 50){
-            playing = false;
-            console.log("Player 2가 이겼습니다.");
-        }
+        // checkWinner();
+        // playing && changePlayer();
+
     }
 
     const getDiceNumber = () => {
@@ -77,6 +95,7 @@ function App() {
 
     const rollDice = () => {
         // console.log("player: ", activePlayer);
+        checkWinner();
         if (playing) {
             let randomDice = getDiceNumber();
             // console.log("dice: ", newDice);
@@ -89,7 +108,7 @@ function App() {
             }
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
-            if (randomDice <= 2) {
+            if (randomDice <= 1) {
                 // 현재 값 초기화
                 setCurrentScore(0);
                 // player 차례 바꿔 주는 로직
@@ -98,7 +117,6 @@ function App() {
                 // 현재 값에 Dice 값 추가
                 setCurrentScore(currentScore + randomDice);
             }
-
             console.log("player: ", activePlayer, "dice: ", randomDice, "currentScore: ", currentScore);
         } else {
             // 게임이 종료된 경우 playing = false 인 경우
@@ -107,10 +125,11 @@ function App() {
 
     return (
         <main>
-
-            <section className={activePlayer === 1 ? "player player--active" : "player"}>
+            <section className={ winner === 1 ?
+                "player player--winner" : activePlayer === 1 ? "player player--active" : "player" }>
                 <h2 className="name" id="name--0">Player 1</h2>
                 <p className="score" id="score--0">{user1Score ? user1Score : 0}</p>
+                {winner === 1 && <p>1번 PLAYER 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
                     <p className="current-score" id="current--0">
@@ -118,9 +137,11 @@ function App() {
                     </p>
                 </div>
             </section>
-            <section className={activePlayer === 2 ? "player player--active" : "player"}>
+            <section className={ winner === 2 ?
+                "player player--winner" : activePlayer === 2 ? "player player--active" : "player" }>
                 <h2 className="name" id="name--1">Player 2</h2>
                 <p className="score" id="score--1">{user2Score ? user2Score : 0}</p>
+                {winner === 2 && <p>2번 PLAYER 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
                     <p className="current-score" id="current--1">
