@@ -66,28 +66,14 @@ function App() {
         if (playing) {
             let randomDice = getDiceNumber();
             setDice(randomDice);
-            // dice값 적용
-
-            // Update dice image
-
-            // if (diceImgRef.current) {
-            //     diceImgRef.current.src = `/assets/dice${randomDice}.png`;
-            // }
-            // console.log("diceImgRef.current: ", diceImgRef.current);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
-            if (randomDice <= 1) {
-                // 현재 값 초기화
-                setCurrentScore(0);
-                // player 차례 바꿔 주는 로직
+            if (randomDice <= 2) {
                 changePlayer();
             } else {
                 // 현재 값에 Dice 값 추가
                 setCurrentScore(currentScore + randomDice);
             }
-            // console.log("player: ", activePlayer, "dice: ", randomDice, "currentScore: ", currentScore);
-        } else {
-            // 게임이 종료된 경우 playing = false 인 경우
         }
     }
 
@@ -95,6 +81,7 @@ function App() {
     // [5] hold 버튼 누르는 경우 턴 교체
     const changePlayer = () => {
         if (playing) {
+            setCurrentScore(0); // 현재 굴린 주사위 값 초기화
             activePlayer = activePlayer === 1 ? 2 : 1;
         }
     }
@@ -114,8 +101,6 @@ function App() {
                 user2: score
             })
         }
-        // 주사위 계산 값 초기화 및 턴 넘기기
-        setCurrentScore(0);
         changePlayer();
     }
 
@@ -126,15 +111,12 @@ function App() {
 
     // [6] 승리 표기하기
     const checkWinner = () => {
-        console.log("userScore : ",userScore);
         if (userScore.user1 >= 50) {
             playing = false;
             setWinner(1);
-            console.log("Player 1이 이겼습니다.");
         } else if (userScore.user2 >= 50) {
             playing = false;
-            setWinner(1);
-            console.log("Player 2이 이겼습니다.");
+            setWinner(2);
         }
     }
 
