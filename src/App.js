@@ -44,7 +44,7 @@ function App() {
             setDice(randomDice);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
-            if (randomDice <= 0) {
+            if (randomDice <= 2) {
                 changePlayer();
             } else {
                 // 현재 값에 Dice 값 추가
