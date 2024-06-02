@@ -1,26 +1,12 @@
 import './App.css';
 import {useEffect, useRef, useState} from "react";
 
-// eslint-disable-next-line no-unused-vars
-let currentScore, activePlayer, playing;
-const init = () => {
-    // 초기화 작업 할 것
-    currentScore = 0;
-    activePlayer = 1;
-    playing = true;
-
-    // player1 또는 2가 승리 시 disabled 한 부분 제거
-    // player-active 된 부분 제거
-}
-
-// 새 게임 시작 (시작일 수도 또 리셋일수도 있음) 먼저 초기화 작업 해주기
-init();
-
 function App() {
     // 게임 시작 버튼을 누르기 전에 Dice의 img가 보이지 않도록 설정
-    const [gameStart, setGameStart] = useState(false);
+    const [gameStart, setGameStart] = useState(true);
     const [dice, setDice] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
+    const [activePlayer, setActivePlayer] = useState(1);
     const [userScore, setUserScore] = useState({user1: 0, user2: 0});
     const [winner, setWinner] = useState(null);
     const diceImgRef = useRef(null);
@@ -29,46 +15,39 @@ function App() {
         if (diceImgRef.current) {
             diceImgRef.current.src = `/assets/dice${dice}.png`;
         }
-        console.log("diceImgRef.current: ", diceImgRef.current);
+        // console.log("diceImgRef.current: ", diceImgRef.current);
 
-        // 50점 이상인 경우 승리 표시하기
-        if(playing) {
+        if(gameStart) {
             checkWinner();
         }
-        if (winner) {
-            changePlayer();
-        }
-    }, [dice, winner, userScore.user1, userScore.user2]);
+    }, [dice, gameStart, userScore.user1, userScore.user2]);
 
+    // [0] 게임의 진행 여부와 상관 없이 초기화
     const initGame = () => {
-        if (gameStart) {
-            playing = true;
-            setGameStart(false);
-            setCurrentScore(0);
-            setDice(0);
-            setUserScore({user1: 0, user2: 0});
-            activePlayer = 1;
-            setWinner(null);
-        }
+        setGameStart(false);
+        setCurrentScore(0);
+        setDice(0);
+        setUserScore({user1: 0, user2: 0});
+        setActivePlayer(1);
+        setWinner(null);
     }
+
     // [1] 게임 시작하는 경우
-    // View가 처음 렌더링 되는 경우 gameStart = false;
+    // View가 처음 렌더링 되는 경우 gameStart = true;
     const startGame = () => {
-        if (!gameStart) {
-            setGameStart(true);
-        }
-        rollDice();
+        gameStart ? rollDice() : setGameStart(true);
     }
 
     // [2] 주사위 굴리기
     const rollDice = () => {
         checkWinner();
-        if (playing) {
+        if (gameStart) {
             let randomDice = getDiceNumber();
             setDice(randomDice);
+            console.log(randomDice);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
-            if (randomDice <= 2) {
+            if (randomDice <= 0) {
                 changePlayer();
             } else {
                 // 현재 값에 Dice 값 추가
@@ -80,9 +59,9 @@ function App() {
     // [3] 주사위의 눈이 1,2인 경우 턴 교체
     // [5] hold 버튼 누르는 경우 턴 교체
     const changePlayer = () => {
-        if (playing) {
+        if (gameStart) {
             setCurrentScore(0); // 현재 굴린 주사위 값 초기화
-            activePlayer = activePlayer === 1 ? 2 : 1;
+            setActivePlayer(prevPlayer => (prevPlayer === 1 ? 2 : 1));
         }
     }
 
@@ -112,10 +91,10 @@ function App() {
     // [6] 승리 표기하기
     const checkWinner = () => {
         if (userScore.user1 >= 50) {
-            playing = false;
+            setGameStart(false);
             setWinner(1);
         } else if (userScore.user2 >= 50) {
-            playing = false;
+            setGameStart(false);
             setWinner(2);
         }
     }
@@ -147,7 +126,7 @@ function App() {
                 </div>
             </section>
             <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
-            {gameStart && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
+            {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
             <button className="btn btn--roll" onClick={startGame}>🎲 Roll dice</button>
             <button className="btn btn--hold" onClick={holdGame}>📥 Hold</button>
         </main>
