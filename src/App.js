@@ -101,46 +101,50 @@ function App() {
         return Math.trunc(Math.random() * 6) + 1;
     }
 
-
-
-
     const closeModal = () => {
         setWinner(null);
         initGame();
     }
 
     return (
-        <main>
-            <section className={ winner === 1 ?
-                "player player--winner" : (gameStart && activePlayer === 1) ? "player player--active" : "player" }>
-                <h2 className="name" id="name--0">Player 1</h2>
-                <p className="score" id="score--0">{userScore.user1 ? userScore.user1 : 0}</p>
-                {winner === 1 && <p className="current-label">PLAYER 1이 이겼습니다.</p>}
-                <div className="current">
-                    <p className="current-label">Current</p>
-                    <p className="current-score" id="current--0">
-                        {activePlayer === 1 && gameStart ? currentScore : 0}
-                    </p>
-                </div>
-            </section>
-            <section className={ winner === 2 ?
-                "player player--winner" : (gameStart && activePlayer === 2) ? "player player--active" : "player" }>
-                <h2 className="name" id="name--1">Player 2</h2>
-                <p className="score" id="score--1">{userScore.user2 ? userScore.user2 : 0}</p>
-                {winner === 2 && <p className="current-label">PLAYER 2가 이겼습니다.</p>}
-                <div className="current">
-                    <p className="current-label">Current</p>
-                    <p className="current-score" id="current--1">
-                        {activePlayer === 2 && gameStart ? currentScore : 0}
-                    </p>
-                </div>
-            </section>
-            <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
-            {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
-            <button className="btn btn--roll" onClick={startGame} disabled={!gameStart}>🎲 Roll dice</button>
-            <button className="btn btn--hold" onClick={holdGame} disabled={!gameStart}>📥 Hold</button>
-            {winner !== null && <Toast message={winner} onConfirm={closeModal}/>}
-        </main>
+        <>
+            <main>
+                <section className={ winner === 1 ?
+                    "player player--winner" : (gameStart && activePlayer === 1) ? "player player--active" : "player" }>
+                    <h2 className="name" id="name--0">Player 1</h2>
+                    <p className="score" id="score--0">{userScore.user1 ? userScore.user1 : 0}</p>
+                    {winner === 1 && <p className="current-label">PLAYER 1이 이겼습니다.</p>}
+                    <div className="current">
+                        <p className="current-label">Current</p>
+                        <p className="current-score" id="current--0">
+                            {activePlayer === 1 && gameStart ? currentScore : 0}
+                        </p>
+                    </div>
+                </section>
+                <section className={ winner === 2 ?
+                    "player player--winner" : (gameStart && activePlayer === 2) ? "player player--active" : "player" }>
+                    <h2 className="name" id="name--1">Player 2</h2>
+                    <p className="score" id="score--1">{userScore.user2 ? userScore.user2 : 0}</p>
+                    {winner === 2 && <p className="current-label">PLAYER 2가 이겼습니다.</p>}
+                    <div className="current">
+                        <p className="current-label">Current</p>
+                        <p className="current-score" id="current--1">
+                            {activePlayer === 2 && gameStart ? currentScore : 0}
+                        </p>
+                    </div>
+                </section>
+                <button className="btn btn--new" onClick={initGame}>🔄 New game</button>
+                {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
+                <button className="btn btn--roll" onClick={startGame} disabled={!gameStart}>🎲 Roll dice</button>
+                <button className="btn btn--hold" onClick={holdGame} disabled={!gameStart}>📥 Hold</button>
+                {winner !== null && <Toast message={winner} onConfirm={closeModal}/>}
+            </main>
+            <footer>
+                <a href="https://github.com/newfly101/BootCamp-DiceGame" target="_blank" rel="noopener noreferrer">
+                    <button className="btn">🔥GITHUB</button>
+                </a>
+            </footer>
+        </>
     );
 }
 
