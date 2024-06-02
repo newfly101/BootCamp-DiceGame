@@ -1,8 +1,10 @@
 # 주사위 게임
 
 ## Reference
-
 [https://pig-game-v2.netlify.app/]
+
+### Build Netlify
+(https://newfly101-react-dicegame-clone.netlify.app/)
 
 ### Project Description
 
