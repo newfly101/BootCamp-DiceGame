@@ -22,8 +22,6 @@ function App() {
     const [dice, setDice] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
     const [userScore, setUserScore] = useState({user1: 0, user2: 0});
-    const [user1Score, setUser1Score] = useState(0);
-    const [user2Score, setUser2Score] = useState(0);
     const [winner, setWinner] = useState(0);
     const diceImgRef = useRef();
 
@@ -44,8 +42,6 @@ function App() {
             setCurrentScore(0);
             setDice(0);
             setUserScore({user1: 0, user2: 0});
-            // setUser1Score(0);
-            // setUser2Score(0);
             activePlayer = 1;
             setWinner(0);
         }
@@ -69,15 +65,6 @@ function App() {
             setWinner(1);
             console.log("Player 2이 이겼습니다.");
         }
-        // if (user1Score >= 50) {
-        //     playing = false;
-        //     setWinner(1);
-        //     console.log("Player 1이 이겼습니다.");
-        // } else if (user2Score >= 50){
-        //     playing = false;
-        //     setWinner(2);
-        //     console.log("Player 2가 이겼습니다.");
-        // }
     }
 
     const holdGame = () => {
@@ -87,14 +74,12 @@ function App() {
                 user1: score,
                 user2: userScore.user2,
             })
-            // setUser1Score(user1Score + currentScore);
         } else {
             let score = userScore.user2 + currentScore;
             setUserScore({
                 user1: userScore.user1,
                 user2: score
             })
-            // setUser2Score(user2Score + currentScore);
         }
         // 사용자 값 초기화
         setCurrentScore(0);
@@ -145,7 +130,6 @@ function App() {
                 "player player--winner" : activePlayer === 1 ? "player player--active" : "player" }>
                 <h2 className="name" id="name--0">Player 1</h2>
                 <p className="score" id="score--0">{userScore.user1 ? userScore.user1 : 0}</p>
-                {/*<p className="score" id="score--0">{user1Score ? user1Score : 0}</p>*/}
                 {winner === 1 && <p>1번 PLAYER 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
@@ -158,7 +142,6 @@ function App() {
                 "player player--winner" : activePlayer === 2 ? "player player--active" : "player" }>
                 <h2 className="name" id="name--1">Player 2</h2>
                 <p className="score" id="score--1">{userScore.user2 ? userScore.user2 : 0}</p>
-                {/*<p className="score" id="score--1">{user2Score ? user2Score : 0}</p>*/}
                 {winner === 2 && <p>2번 PLAYER 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
