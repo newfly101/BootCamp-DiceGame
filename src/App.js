@@ -1,5 +1,6 @@
 import './App.css';
 import {useEffect, useRef, useState} from "react";
+import Toast from "./component/Toast";
 
 function App() {
     // 게임 시작 버튼을 누르기 전에 Dice의 img가 보이지 않도록 설정
@@ -41,7 +42,6 @@ function App() {
         if (gameStart) {
             let randomDice = getDiceNumber();
             setDice(randomDice);
-            // console.log(randomDice);
 
             // dice의 눈이 1,2인 경우 게임 종료 및 턴 넘기고, init 진행
             if (randomDice <= 0) {
@@ -84,7 +84,6 @@ function App() {
         if (!winner) {
             changePlayer();
         }
-
     }
 
     // [2-1] 주사위 굴리기 : 랜덤 주사위 숫자
@@ -103,13 +102,18 @@ function App() {
         }
     }
 
+    const closeModal = () => {
+        setWinner(null);
+        initGame();
+    }
+
     return (
         <main>
             <section className={ winner === 1 ?
                 "player player--winner" : (gameStart && activePlayer === 1) ? "player player--active" : "player" }>
                 <h2 className="name" id="name--0">Player 1</h2>
                 <p className="score" id="score--0">{userScore.user1 ? userScore.user1 : 0}</p>
-                {winner === 1 && <p>1번 PLAYER 이겼습니다.</p>}
+                {winner === 1 && <p className="current-label">PLAYER 1이 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
                     <p className="current-score" id="current--0">
@@ -121,7 +125,7 @@ function App() {
                 "player player--winner" : (gameStart && activePlayer === 2) ? "player player--active" : "player" }>
                 <h2 className="name" id="name--1">Player 2</h2>
                 <p className="score" id="score--1">{userScore.user2 ? userScore.user2 : 0}</p>
-                {winner === 2 && <p>2번 PLAYER 이겼습니다.</p>}
+                {winner === 2 && <p className="current-label">PLAYER 2가 이겼습니다.</p>}
                 <div className="current">
                     <p className="current-label">Current</p>
                     <p className="current-score" id="current--1">
@@ -133,6 +137,7 @@ function App() {
             {dice !== 0 && <img ref={diceImgRef} src={`/assets/dice${dice}.png`} alt="Playing dice" className="dice"/>}
             <button className="btn btn--roll" onClick={startGame} disabled={!gameStart}>🎲 Roll dice</button>
             <button className="btn btn--hold" onClick={holdGame} disabled={!gameStart}>📥 Hold</button>
+            {winner !== null && <Toast message={winner} onConfirm={closeModal}/>}
         </main>
     );
 }
